@@ -126,10 +126,14 @@ def test_transitive(a: float, b: float, c: float) -> None:
     "Test the transitive property of less-than (a < b and b < c implies a < c)"
     # TODO: Implement for Task 0.2.
     # raise NotImplementedError("Need to implement for Task 0.2")
-    assert_close(lt(a, b) * lt(b, c), lt(a, c))
+    if lt(a,b) and lt(b,c):
+        assert lt(a,c) == 1.0
+
+
 
 
 @pytest.mark.task0_2
+@given(small_floats, small_floats)
 def test_symmetric(a, b) -> None:
     """
     Write a test that ensures that :func:`minitorch.operators.mul` is symmetric, i.e.
@@ -141,6 +145,7 @@ def test_symmetric(a, b) -> None:
     assert_close(add(a, b), add(b, a))
 
 @pytest.mark.task0_2
+@given(small_floats, small_floats, small_floats)
 def test_distribute(x, y, z) -> None:
     r"""
     Write a test that ensures that your operators distribute, i.e.
