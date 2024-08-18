@@ -32,28 +32,61 @@ class Module:
     def train(self) -> None:
         "Set the mode of this module and all descendent modules to `train`."
         # TODO: Implement for Task 0.4.
-        raise NotImplementedError("Need to implement for Task 0.4")
+        # raise NotImplementedError("Need to implement for Task 0.4")
+        def update(cur) -> None:
+            cur.training = True
+            for child in cur.__dict__["_modules"].values():
+                update(child)
+            
+        update(self)
+            
 
     def eval(self) -> None:
         "Set the mode of this module and all descendent modules to `eval`."
         # TODO: Implement for Task 0.4.
-        raise NotImplementedError("Need to implement for Task 0.4")
+        # raise NotImplementedError("Need to implement for Task 0.4")
+        def update(cur) -> None:
+            cur.training = False
+            for child in cur.__dict__["_modules"].values():
+                update(child)
+
+        update(self)
 
     def named_parameters(self) -> Sequence[Tuple[str, Parameter]]:
         """
         Collect all the parameters of this module and its descendents.
 
-
         Returns:
             The name and `Parameter` of each ancestor parameter.
         """
         # TODO: Implement for Task 0.4.
-        raise NotImplementedError("Need to implement for Task 0.4")
+        # raise NotImplementedError("Need to implement for Task 0.4")
+        res = {}
+        def get_params(name, cur) -> None:
+            prefix = f'{name}.' if name else ''
+            
+            for param_name, param_val in cur.__dict__["_parameters"].items():
+                res[prefix + param_name] = param_val
+            for child_name, child_module in cur.__dict__["_modules"].items():
+                get_params(prefix + child_name, child_module)
+        
+        get_params('', self)
+        return res
 
     def parameters(self) -> Sequence[Parameter]:
         "Enumerate over all the parameters of this module and its descendents."
         # TODO: Implement for Task 0.4.
-        raise NotImplementedError("Need to implement for Task 0.4")
+        # raise NotImplementedError("Need to implement for Task 0.4")
+        res = []
+        def get_params(cur) -> None:
+  
+            for param in cur.__dict__["_parameters"].values():
+                res.append(param)
+            for child_module in cur.__dict__["_modules"].values():
+                get_params(child_module)
+        
+        get_params(self)
+        return res
 
     def add_parameter(self, k: str, v: Any) -> Parameter:
         """
